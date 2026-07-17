@@ -15,7 +15,7 @@ public class JwtService {
 	
 	private static final String SECRET_KEY = "nagamgangarajusecretkey7702592496";
 	
-	//It converts string type of secretkey to bytes type 
+	//It converts string type of secretkey to bytes type  
 	private SecretKey getSignKey() 
 	{
 		return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
