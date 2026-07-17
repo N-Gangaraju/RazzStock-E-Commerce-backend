@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DTO.ProductRequest;
+import com.example.demo.DTO.ProductResponse;
 import com.example.demo.Entites.Product;
 import com.example.demo.services.ProductService;
 
@@ -62,26 +64,48 @@ public class ProductController {
 	{
 		return serv.findByCategory(name);
 	}
-	
-	
+	@Operation(summary = "Get Products By Searching Both Brands and Categories")
+	@GetMapping("filter")
+	public List<Product>filterProducts(@RequestParam String brand,@RequestParam String category)
+	{
+		return serv.findByBrandAndCategory(brand, category);
+	} 
+	@Operation(summary = "Get Products Count")
+	@GetMapping("/count")
+	public long getProductCount()
+	{
+		return serv.getProductCount();
+	}
+	@Operation(summary = "Get Low Stock Products ")
+	@GetMapping("/stock/low")
+	public List<Product>getLowStockProducts()
+	{
+		return serv.findByQuantityLessThan();
+	}
+	@Operation(summary = "Get Out of Stock Products")
+	@GetMapping("/stock/out")
+	public List<Product>getOutOfStockProducts()
+	{
+		return serv.findOutOfStockProducts();
+	}
 	//----------------------------------CURD---------------------------------------
 	@Operation(summary="Add a Product")
 	@PostMapping
-	public Product addProduct(@RequestBody Product prod)
+	public Product addProduct(@RequestBody ProductRequest prod)
 	{
-		return serv.addProduct(prod);
+		return serv.addProduct(prod); 
 	}
 	
 	@Operation(summary = "Get All Products")
 	@GetMapping
-	public List<Product>getAllProducts()
+	public List<ProductResponse>getAllProducts()
 	{
 		return serv.readData();
 	}
 	
 	@Operation(summary = "Get Product By Id")
 	@GetMapping("/{id}")
-	public Product getById(@PathVariable Integer id)
+	public ProductResponse getById(@PathVariable Integer id)
 	{
 		return serv.getProductById(id);
 	}

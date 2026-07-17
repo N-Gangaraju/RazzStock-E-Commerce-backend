@@ -7,14 +7,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.DTO.ProductRequest;
+import com.example.demo.DTO.ProductResponse;
+import com.example.demo.Entites.Category;
 import com.example.demo.Entites.Product;
+import com.example.demo.Entites.Supplier;
 import com.example.demo.Exceptions.ResourceNotFoundException;
+import com.example.demo.repos.Categoryrepo;
 import com.example.demo.repos.ProductRepo;
+import com.example.demo.repos.Supplierrepo;
 @Service
 public class ProductService {
 	
 	@Autowired
 	private ProductRepo repo;
+	@Autowired
+	private Categoryrepo categoryrepo;
+	@Autowired
+	private Supplierrepo supplierrepo;
 	
 	public Page<Product>getAllProducts(Pageable pageable)
 	{
@@ -36,18 +46,74 @@ public class ProductService {
 	{
 		return repo.findByCategory_Name(name);
 	}
+	public List<Product>findByBrandAndCategory(String name,String category)
+	{
+		return repo.findByBrandAndCategory_Name(name, category);
+	}
+	public long getProductCount()
+	{
+		return repo.count();
+	}
+	public List<Product>findByQuantityLessThan()
+	{
+		return repo.findByQuantityLessThan(5);
+	}
+	public List<Product>findOutOfStockProducts()
+	{
+		return repo.findByQuantity(0);
+	}
+	private ProductResponse convertToResponse(Product product)
+	{
+		ProductResponse response = new ProductResponse();
+		response.setId(product.getId());
+	    response.setName(product.getName());
+	    response.setBrand(product.getBrand());
+	    response.setPrice(product.getPrice());
+	    response.setQuantity(product.getQuantity());
+	    response.setDescription(product.getDescription());
+
+	    response.setCategoryname(product.getCategory().getName());
+	    response.setSuppliername(product.getSupplier().getName());
+
+	    response.setCreatedAt(product.getCreatedAt().toString());
+	    response.setUpdatedAt(product.getUpdatedAt().toString());
+
+	    return response;
+	}
 	//-----------------------------CRUD---------------------------------------------
-	public Product addProduct(Product prod)
+	public Product addProduct(ProductRequest request)
 	{
-		return repo.save(prod);
+	    Category category = categoryrepo.findById(request.getCategoryId())
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Category not found with id: " + request.getCategoryId()));
+
+	    Supplier supplier = supplierrepo.findById(request.getSupplierId())
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Supplier not found with id: " + request.getSupplierId()));
+	    Product product=new Product();
+	    product.setName(request.getName());
+	    product.setBrand(request.getBrand());
+	    product.setPrice(request.getPrice());
+	    product.setQuantity(request.getQuantity());
+	    product.setDescription(request.getDescription());
+
+	    product.setCategory(category);
+	    product.setSupplier(supplier);
+
+	    return repo.save(product);
+	    
 	}
-	public List<Product> readData()
+	public List<ProductResponse> readData()
 	{
-		return repo.findAll();
+		return repo.findAll()
+				.stream()
+				.map(product -> convertToResponse(product))
+				.toList();
 	}
-	public Product getProductById(Integer id) 
+	public ProductResponse getProductById(Integer id) 
 	{
-	    return repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Product not found with id:"+id));
+	    Product product = repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Product not found with id:"+id));
+	    return convertToResponse(product);
 	}
 	public Product updateProduct(Integer id, Product product) 
 	{

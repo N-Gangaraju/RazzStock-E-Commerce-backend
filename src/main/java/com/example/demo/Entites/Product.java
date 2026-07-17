@@ -1,10 +1,14 @@
 package com.example.demo.Entites;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -31,6 +35,8 @@ public class Product {
 	private Category category;
 	@ManyToOne
 	private Supplier supplier;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 	public Product() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -46,6 +52,15 @@ public class Product {
 		this.description = description;
 		this.category = category;
 		this.supplier = supplier;
+	}
+	@PrePersist
+	public void onCreate() {
+		this.createdAt = LocalDateTime.now();
+		this.updatedAt = LocalDateTime.now();
+	}
+	@PreUpdate
+	public void onUpdate() {
+		this.updatedAt = LocalDateTime.now();
 	}
 	public Integer getId() {
 		return id;
@@ -94,6 +109,18 @@ public class Product {
 	}
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
+	}
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 	@Override
 	public String toString() {
