@@ -2,6 +2,6 @@ package com.example.demo.Enum;
 
 public enum Roles {
 	ADMIN,
-	USER
+	CUSTOMER
 
 }

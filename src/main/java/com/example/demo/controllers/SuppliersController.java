@@ -27,7 +27,7 @@ public class SuppliersController {
 	private SupplierService service;
 	
 	@Operation(summary="Add a Supplier")
-	@PostMapping
+	@PostMapping("/add")
 	public Supplier addSupplier(@RequestBody Supplier supplier)
 	{
 		return service.addSupplier(supplier);
@@ -48,14 +48,14 @@ public class SuppliersController {
 	}
 	
 	@Operation(summary="Update Supplier")
-	@PutMapping("/{id}")
+	@PutMapping("/update/{id}")
 	public Supplier updateSupplier(@PathVariable Integer id,@RequestBody Supplier supplier)
 	{
 		return service.update(id, supplier);
 	}
 	
 	@Operation(summary = "Delete Supplier")
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/delete/{id}")
 	public Supplier deleteSupplier(@PathVariable  Integer id)
 	{
 		return service.deleteById(id);

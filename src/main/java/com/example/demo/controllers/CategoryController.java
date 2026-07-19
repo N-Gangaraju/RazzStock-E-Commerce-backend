@@ -26,7 +26,7 @@ public class CategoryController {
 	private CategoryService service;
 	
 	@Operation(summary = "Add a Category")
-	@PostMapping
+	@PostMapping("/add")
 	public Category addCategory(@RequestBody Category cat)
 	{
 		return service.addCategory(cat);
@@ -47,14 +47,14 @@ public class CategoryController {
 	}
 	
 	@Operation(summary = "Update Category")
-	@PutMapping("/{id}")
+	@PutMapping("/update/{id}")
 	public Category updateCategory(@PathVariable Integer id,@RequestBody Category cat)
 	{
 		return service.update(id, cat);
 	}
 	
 	@Operation(summary  = "Delete Category")
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/delete/{id}")
 	public Category deleteCategory(@PathVariable  Integer id)
 	{
 		return service.deleteById(id);

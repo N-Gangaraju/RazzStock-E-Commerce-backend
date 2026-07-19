@@ -90,7 +90,7 @@ public class ProductController {
 	}
 	//----------------------------------CURD---------------------------------------
 	@Operation(summary="Add a Product")
-	@PostMapping
+	@PostMapping("/add")
 	public Product addProduct(@RequestBody ProductRequest prod)
 	{
 		return serv.addProduct(prod); 
@@ -111,14 +111,14 @@ public class ProductController {
 	}
 	
 	@Operation(summary = "Update Product")
-	@PutMapping("/{id}")
+	@PutMapping("/update/{id}")
 	public Product updateById(@PathVariable Integer id,@RequestBody Product prod)
 	{
 		return serv.updateProduct(id, prod);
 	}
 	
 	@Operation(summary = "Delete Product")
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/delete/{id}")
 	public Product deletebyId(@PathVariable Integer id)
 	{
 		return serv.deleteProduct(id);

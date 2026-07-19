@@ -75,8 +75,17 @@ public class ProductService {
 	    response.setCategoryname(product.getCategory().getName());
 	    response.setSuppliername(product.getSupplier().getName());
 
-	    response.setCreatedAt(product.getCreatedAt().toString());
-	    response.setUpdatedAt(product.getUpdatedAt().toString());
+	    response.setCreatedAt(
+	    	    product.getCreatedAt() != null
+	    	        ? product.getCreatedAt().toString()
+	    	        : null
+	    	);
+
+	    	response.setUpdatedAt(
+	    	    product.getUpdatedAt() != null
+	    	        ? product.getUpdatedAt().toString()
+	    	        : null
+	    	);
 
 	    return response;
 	}
