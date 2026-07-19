@@ -123,5 +123,10 @@ public class ProductController {
 	{
 		return serv.deleteProduct(id);
 	}
+	@GetMapping("/search")
+	public List<ProductResponse> searchProducts(@RequestParam String keyword)
+	{
+		return serv.searchProducts(keyword);
+	}
 
 }

@@ -3,6 +3,7 @@ package com.example.demo.services;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -36,30 +37,69 @@ public class CartService {
 	
 	public CartResponse addToCart(CartRequest request)
 	{
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication() ;
-		String username = authentication.getName();
-		
-		User user = userRepo.findByUsername(username)
-				.orElseThrow(()->new RuntimeException("User Not Found"));
-		
-		Product product = productRepo.findById(request.getProductId())
-				.orElseThrow(()->new RuntimeException("Product Not Found"));
-		Cart cart=new Cart();
-		cart.setUser(user);
-		cart.setProduct(product);
-		cart.setQuantity(request.getQuantity());
-		
-		Cart savedCart = cartRepo.save(cart);
-		
-		CartResponse response = new CartResponse();
-		response.setCartId(cart.getId());
-		response.setUsername(cart.getUser().getUsername());
-		response.setQuantity(cart.getQuantity());
-		response.setProductName(cart.getProduct().getName());
-		response.setPrice(cart.getProduct().getPrice());
-		response.setAmount(cart.getProduct().getPrice()*cart.getQuantity());
-		return response;
-		
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String username = authentication.getName();
+
+	    User user = userRepo.findByUsername(username)
+	            .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+	    Product product = productRepo.findById(request.getProductId())
+	            .orElseThrow(() -> new RuntimeException("Product Not Found"));
+
+	    // Check if product already exists in user's cart
+	    Optional<Cart> existingCart = cartRepo.findByUserAndProduct(user, product);
+
+	    if (existingCart.isPresent())
+	    {
+	        Cart cart = existingCart.get();
+
+	        int newQuantity = cart.getQuantity() + request.getQuantity();
+
+	        if (newQuantity > product.getQuantity())
+	        {
+	            throw new RuntimeException(
+	                    "Only " + product.getQuantity() + " items are available.");
+	        }
+
+	        cart.setQuantity(newQuantity);
+
+	        Cart savedCart = cartRepo.save(cart);
+
+	        CartResponse response = new CartResponse();
+	        response.setCartId(savedCart.getId());
+	        response.setUsername(savedCart.getUser().getUsername());
+	        response.setProductName(savedCart.getProduct().getName());
+	        response.setQuantity(savedCart.getQuantity());
+	        response.setPrice(savedCart.getProduct().getPrice());
+	        response.setAmount(savedCart.getProduct().getPrice() * savedCart.getQuantity());
+
+	        return response;
+	    }
+
+	    // Check stock for new cart item
+	    if (request.getQuantity() > product.getQuantity())
+	    {
+	        throw new RuntimeException(
+	                "Only " + product.getQuantity() + " items are available.");
+	    }
+
+	    // Create new cart item
+	    Cart cart = new Cart();
+	    cart.setUser(user);
+	    cart.setProduct(product);
+	    cart.setQuantity(request.getQuantity());
+
+	    Cart savedCart = cartRepo.save(cart);
+
+	    CartResponse response = new CartResponse();
+	    response.setCartId(savedCart.getId());
+	    response.setUsername(savedCart.getUser().getUsername());
+	    response.setProductName(savedCart.getProduct().getName());
+	    response.setQuantity(savedCart.getQuantity());
+	    response.setPrice(savedCart.getProduct().getPrice());
+	    response.setAmount(savedCart.getProduct().getPrice() * savedCart.getQuantity());
+
+	    return response;
 	}
 	public List<CartResponse>myCart()
 	{
@@ -153,9 +193,9 @@ public class CartService {
 	    	{
 	    		throw new RuntimeException(product.getName()+" is out of stock");
 	    	}
-	    	System.out.println("Before update;"+product.getQuantity());
+	    	//System.out.println("Before update;"+product.getQuantity());
 	    	product.setQuantity(available - requested);
-	    	System.out.println("after update:"+product.getQuantity());
+	    	//System.out.println("after update:"+product.getQuantity());
 	    	productRepo.save(product);
 	    	
 	        Order order = new Order();

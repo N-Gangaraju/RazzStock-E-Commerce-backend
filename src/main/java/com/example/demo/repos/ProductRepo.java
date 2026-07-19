@@ -17,6 +17,9 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
 	List<Product>findByBrandAndCategory_Name(String name,String category);
 	List<Product>findByQuantityLessThan(Integer quantity);
 	List<Product>findByQuantity(Integer quantity);
+	List<Product>findByNameContainingIgnoreCase(String name);
+	
+	
 	
 	
 	

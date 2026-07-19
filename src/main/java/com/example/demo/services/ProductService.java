@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,18 @@ public class ProductService {
 	    	);
 
 	    return response;
+	}
+	public List<ProductResponse> searchProducts(String keyword)
+	{
+		List<Product>products = repo.findByNameContainingIgnoreCase(keyword);
+		List<ProductResponse>responses = new ArrayList<>();
+		
+		for(Product product : products)
+		{
+		    responses.add(convertToResponse(product));
+		}
+		
+		return responses;
 	}
 	//-----------------------------CRUD---------------------------------------------
 	public Product addProduct(ProductRequest request)
