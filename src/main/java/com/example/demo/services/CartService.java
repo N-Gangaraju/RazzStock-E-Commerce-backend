@@ -23,6 +23,7 @@ import com.example.demo.repos.OrderRepo;
 import com.example.demo.repos.ProductRepo;
 import com.example.demo.repos.UserRepo;
 
+
 @Service
 public class CartService {
 	
@@ -34,6 +35,7 @@ public class CartService {
 	private UserRepo userRepo;
 	@Autowired
 	private OrderRepo orderrepo;
+	
 	
 	public CartResponse addToCart(CartRequest request)
 	{
@@ -218,6 +220,8 @@ public class CartService {
 	    cartRepo.deleteAll(carts);
 	    return "Order Placed Successfully";
 	}
+	
+	
 	
 	
 }
