@@ -102,6 +102,46 @@ public class ProductService {
 		
 		return responses;
 	}
+	public List<ProductResponse>SearchByBrand(String brand)
+	{
+		List<Product>products = repo.findByBrandContainingIgnoreCase(brand);
+		List<ProductResponse> responses = new ArrayList<>();
+		for(Product product : products)
+		{
+			responses.add(convertToResponse(product));
+		}
+		return responses;
+	}
+	public List<ProductResponse>SearchByCategory(String category)
+	{
+		List<Product>products = repo.findByCategory_NameContainingIgnoreCase(category);
+		List<ProductResponse>responses = new ArrayList<>();
+		for(Product product : products)
+		{
+			responses.add(convertToResponse(product));
+		}
+		return responses;
+	}
+	public List<ProductResponse>searchByAsce()
+	{
+		List<Product> products = repo.findAllByOrderByPriceAsc();
+		List<ProductResponse>responses = new ArrayList<>();
+		for(Product product : products)
+		{
+			responses.add(convertToResponse(product));
+		}
+		return responses;
+	}
+	public List<ProductResponse>searchByDesc()
+	{
+		List<Product> products = repo.findAllByOrderByPriceDesc();
+		List<ProductResponse>responses = new ArrayList<>();
+		for(Product product : products)
+		{
+			responses.add(convertToResponse(product));
+		}
+		return responses;
+	}
 	//-----------------------------CRUD---------------------------------------------
 	public Product addProduct(ProductRequest request)
 	{

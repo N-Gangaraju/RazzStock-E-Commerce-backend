@@ -46,23 +46,11 @@ public class ProductController {
 	{
 		return serv.searchByName(name);
 	}
-	@Operation(summary = "Get Products By Searching the Brand")
-	@GetMapping("/search/brand")
-	public List<Product>searchByBrand(@RequestParam String name)
-	{
-		return serv.searchByBrand(name);
-	}
 	@Operation(summary = "Get Products By Searching the PriceBetween")
 	@GetMapping("search/price")
 	public List<Product>searchByPrice(@RequestParam Double min,@RequestParam Double max)
 	{
 		return serv.findByPriceBetween(min,max);
-	}
-	@Operation(summary = "Get Products By Searching the Category")
-	@GetMapping("search/category")
-	public List<Product>searchByCategory(@RequestParam String name)
-	{
-		return serv.findByCategory(name);
 	}
 	@Operation(summary = "Get Products By Searching Both Brands and Categories")
 	@GetMapping("filter")
@@ -128,5 +116,25 @@ public class ProductController {
 	{
 		return serv.searchProducts(keyword);
 	}
-
+	@GetMapping("/search/brand")
+	public List<ProductResponse> searchingByBrand(@RequestParam String brand)
+	{
+		return serv.SearchByBrand(brand);
+	}
+	@GetMapping("/search/category")
+	public List<ProductResponse>searchingByCategory(@RequestParam String category)
+	{
+		return serv.SearchByCategory(category);
+	}
+	@GetMapping("/sort/price/asc")
+	public List<ProductResponse>sortByAsce()
+	{
+		return serv.searchByAsce();
+	}
+	@GetMapping("/sort/price/desc")
+	public List<ProductResponse>sortByDesc()
+	{
+		return serv.searchByDesc();
+	}
+	
 }
