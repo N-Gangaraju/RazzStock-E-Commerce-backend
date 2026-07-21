@@ -36,4 +36,9 @@ public class OrderController {
 	{
 		return orderservice.updateOrderStatus(orderId, request);
 	}
+	@PutMapping("/cancel/{orderId}")
+	public String cancelOrder(@PathVariable Integer orderId)
+	{
+		return orderservice.cancelOrder(orderId);
+	}
 }

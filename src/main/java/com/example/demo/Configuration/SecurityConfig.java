@@ -34,6 +34,10 @@ public class SecurityConfig {
         	            "/auth/login"
         	    ).permitAll()
 
+        	    //CUSTOMER + ADMIN
+        	    .requestMatchers(
+        	    		"/orders/myorders"
+        	    		).hasAnyRole("ADMIN","CUSTOMER")
         	    // ADMIN only------------------------------------
         	    .requestMatchers(
         	            "/products/add",
@@ -41,19 +45,24 @@ public class SecurityConfig {
         	            "/products/delete/**",
         	            "/categories/**",
         	            "/suppliers/**",
-        	            "/orders/**"
+        	            "/orders",
+        	            "/orders/{orderId}/status"
         	    ).hasRole("ADMIN")
 
         	    // CUSTOMER only ----------------------------
                 .requestMatchers(
-                        "/cart/**"
+                		"/reviews/add",
+                		"/reviews/update/**",
+                		"/reviews/delete/**",
+                        "/cart/**",
+                        "/orders/cancel/**"
                 ).hasRole("CUSTOMER")
 
         	    // ADMIN and CUSTOMER -----------------------
         	    .requestMatchers(
         	            "/products",
         	            "/products/**",
-        	            "/orders/myorders"
+        	            "/reviews/product/**"
         	    ).hasAnyRole("ADMIN","CUSTOMER")
 
         	    .anyRequest().authenticated()

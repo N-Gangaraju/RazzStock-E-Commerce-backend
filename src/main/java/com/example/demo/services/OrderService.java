@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 import com.example.demo.DTO.OrderResponse;
 import com.example.demo.DTO.UpdateOrderStatusRequest;
 import com.example.demo.Entites.Order;
+import com.example.demo.Entites.Product;
 import com.example.demo.Entites.User;
+import com.example.demo.Enum.OrderStatus;
 import com.example.demo.repos.OrderRepo;
+import com.example.demo.repos.ProductRepo;
 import com.example.demo.repos.UserRepo;
 
 @Service
@@ -22,6 +25,7 @@ public class OrderService {
 	private OrderRepo orderrepo;
 	@Autowired
 	private UserRepo userrepo;
+	@Autowired ProductRepo productRepo;
 	
 	public List<OrderResponse> myOrders()
 	{
@@ -45,8 +49,8 @@ public class OrderService {
 	    	response.setUsername(order.getUser().getUsername());
 	    	response.setProductName(order.getProduct().getName());
 	    	response.setQuantity(order.getQuantity());
-	    	response.setPrice(order.getProduct().getPrice());
-	    	response.setAmount(order.getProduct().getPrice()* order.getQuantity());
+	    	response.setPrice(order.getPrice());
+	    	response.setAmount(order.getAmount());
 	    	response.setStatus(order.getStatus().name());
 	    	response.setOrderedAt(order.getOrderedAt().toString());
 	    	savedResponse.add(response);
@@ -106,5 +110,42 @@ public class OrderService {
 		return response;
 		
 	}
+	public String cancelOrder(Integer orderId)
+	{
+		
+		Authentication authentication =
+		        SecurityContextHolder.getContext().getAuthentication();
+
+		String username = authentication.getName();
+
+		User user = userrepo.findByUsername(username)
+		        .orElseThrow(() -> new RuntimeException("User Not Found"));
+		//fetch the order from the database
+		Order order = orderrepo.findById(orderId)
+		        .orElseThrow(() -> new RuntimeException("Order Not Found"));
+		//checking ownership
+		if (!order.getUser().getId().equals(user.getId())) {
+		    throw new RuntimeException("You are not allowed to cancel this order");
+		}
+		//check status,dont allow shipped and delivered orders
+		if(order.getStatus()!=OrderStatus.PENDING)
+		{
+			throw new RuntimeException("Only PENDING orders can be cancelled");
+		}
+		Product product = order.getProduct();
+		
+		//put the order status back-------------
+		product.setQuantity(product.getQuantity()+order.getQuantity());
+		productRepo.save(product);
+		
+		//change status
+		order.setStatus(OrderStatus.CANCELLED);
+		orderrepo.save(order);
+		return "Order Cancelled Successsfully";
+			
+		
+	}
+	
+	
 	
 }
