@@ -11,6 +11,7 @@ public class ProductResponse {
 	private String suppliername;
 	private String createdAt;
 	private String updatedAt;
+	private String imageUrl;
 
 	public ProductResponse() {
 		super();
@@ -30,6 +31,15 @@ public class ProductResponse {
 		this.suppliername = suppliername;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+	}
+
+	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	public Integer getId() {

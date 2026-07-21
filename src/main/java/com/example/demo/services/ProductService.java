@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.DTO.ProductRequest;
 import com.example.demo.DTO.ProductResponse;
@@ -72,6 +75,9 @@ public class ProductService {
 	    response.setPrice(product.getPrice());
 	    response.setQuantity(product.getQuantity());
 	    response.setDescription(product.getDescription());
+	    response.setImageUrl(
+	            "http://localhost:8080/" + product.getImageUrl()
+	        );
 
 	    response.setCategoryname(product.getCategory().getName());
 	    response.setSuppliername(product.getSupplier().getName());
@@ -199,7 +205,32 @@ public class ProductService {
 
 		return null;
 	}
-	
+	public ProductResponse uploadImage(Integer productId, MultipartFile file) throws IOException {
+
+	    Product product = repo.findById(productId)
+	            .orElseThrow(() -> new RuntimeException("Product Not Found"));
+
+	    // Absolute path inside your project
+	    String uploadPath = System.getProperty("user.dir") + "/uploads/";
+
+	    File directory = new File(uploadPath);
+
+	    if (!directory.exists()) {
+	        directory.mkdirs();
+	    }
+
+	    String fileName = file.getOriginalFilename();
+
+	    File destination = new File(uploadPath + fileName);
+
+	    file.transferTo(destination);
+
+	    product.setImageUrl(fileName);
+
+	    Product savedProduct = repo.save(product);
+
+	    return convertToResponse(savedProduct);
+	}
 	
 
 }

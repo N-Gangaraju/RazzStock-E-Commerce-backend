@@ -19,6 +19,8 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	private String imageUrl;
+	
 	@NotBlank(message="Product name is required")
 	private String name;
 	
@@ -61,6 +63,13 @@ public class Product {
 	@PreUpdate
 	public void onUpdate() {
 		this.updatedAt = LocalDateTime.now();
+	}
+	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 	public Integer getId() {
 		return id;

@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springdoc.core.annotations.ParameterObject;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.DTO.ProductRequest;
 import com.example.demo.DTO.ProductResponse;
@@ -24,6 +26,7 @@ import com.example.demo.services.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/products")
@@ -76,7 +79,16 @@ public class ProductController {
 	{
 		return serv.findOutOfStockProducts();
 	}
+	@PostMapping(value = "/{productId}/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ProductResponse uploadImage(
+	        @PathVariable Integer productId,
+	        @RequestParam("file") MultipartFile file) throws IOException
+	{
+		System.out.println("uploaded endpoint called");
+	    return serv.uploadImage(productId, file);
+	}
 	//----------------------------------CURD---------------------------------------
+	
 	@Operation(summary="Add a Product")
 	@PostMapping("/add")
 	public Product addProduct(@RequestBody ProductRequest prod)
