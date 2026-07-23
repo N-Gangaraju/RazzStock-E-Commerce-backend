@@ -14,6 +14,8 @@ import com.example.demo.DTO.OrderResponse;
 import com.example.demo.DTO.UpdateOrderStatusRequest;
 import com.example.demo.services.OrderService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -21,21 +23,28 @@ public class OrderController {
 	@Autowired
 	private OrderService orderservice;
 	
+	@Operation(summary = "View my Orders")
 	@GetMapping("/myorders")
 	public List<OrderResponse> myorders()
 	{
 		return orderservice.myOrders();
 	}
+	
+	@Operation(summary = "View All Orders")
 	@GetMapping
 	public List<OrderResponse> getAllOrders()
 	{
 		return orderservice.getAllOrders();
 	}
+	
+	@Operation(summary = "Update Order Status")
 	@PutMapping("{orderId}/status")
 	public OrderResponse updateOrderStatus(@PathVariable Integer orderId,@RequestBody UpdateOrderStatusRequest request)
 	{
 		return orderservice.updateOrderStatus(orderId, request);
 	}
+	
+	@Operation(summary = "Cancel Order")
 	@PutMapping("/cancel/{orderId}")
 	public String cancelOrder(@PathVariable Integer orderId)
 	{

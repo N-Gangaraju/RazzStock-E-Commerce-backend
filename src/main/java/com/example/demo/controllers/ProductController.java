@@ -123,26 +123,35 @@ public class ProductController {
 	{
 		return serv.deleteProduct(id);
 	}
+	
+	@Operation(summary = "Search products by keyword ")
 	@GetMapping("/search")
 	public List<ProductResponse> searchProducts(@RequestParam String keyword)
 	{
 		return serv.searchProducts(keyword);
 	}
+	
+	@Operation(summary = "Search products by brand ")
 	@GetMapping("/search/brand")
 	public List<ProductResponse> searchingByBrand(@RequestParam String brand)
 	{
 		return serv.SearchByBrand(brand);
 	}
+	
+	@Operation(summary = "Search products by category ")
 	@GetMapping("/search/category")
 	public List<ProductResponse>searchingByCategory(@RequestParam String category)
 	{
 		return serv.SearchByCategory(category);
 	}
+	
+	@Operation(summary = "Sort products by price ascending")
 	@GetMapping("/sort/price/asc")
 	public List<ProductResponse>sortByAsce()
 	{
 		return serv.searchByAsce();
 	}
+	@Operation(summary = "Sort products by price descending ")
 	@GetMapping("/sort/price/desc")
 	public List<ProductResponse>sortByDesc()
 	{

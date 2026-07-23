@@ -16,5 +16,15 @@ public interface OrderRepo  extends JpaRepository<Order, Integer>{
 	@Query("SELECT COALESCE(SUM(o.amount),0) FROM Order o")
 	Double getTotalRevenue();
 	
+	 @Query("SELECT COUNT(p) FROM Product p WHERE p.quantity < 5")
+	    long countLowStockProducts();
+	 
+	@Query("""
+			SELECT o.product.name, SUM(o.quantity)
+			FROM Order o
+			GROUP BY o.product.name
+			ORDER BY SUM(o.quantity) DESC
+			""")
+			List<Object[]> getTopSellingProducts();
 	
 }

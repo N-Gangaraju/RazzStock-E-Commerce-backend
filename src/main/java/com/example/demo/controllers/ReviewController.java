@@ -16,6 +16,8 @@ import com.example.demo.DTO.ReviewRequest;
 import com.example.demo.DTO.ReviewResponse;
 import com.example.demo.services.ReviewService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 
 
 @RestController
@@ -25,25 +27,27 @@ public class ReviewController {
 	@Autowired
 	private ReviewService reviewService;
 	
+	@Operation(summary = "Add review")
 	@PostMapping("/add")
 	public ReviewResponse addReview(@RequestBody ReviewRequest request)
 	{
 		return reviewService.addReview(request);
 	}
 	
-	//get review of a product
+	@Operation(summary = "Get product reviews")
 	@GetMapping("/product/{productId}")
 	public List<ReviewResponse> getReviewsByProduct(@PathVariable Integer productId)
 	{
 	        return reviewService.getReviewByProduct(productId);
 	}
 	
-	//average rating 
+	@Operation(summary = "Get Average product rating")
 	@GetMapping("product/{productId}/rating")
 	public Double getAverageRating(@PathVariable Integer productId)
 	{
 		return reviewService.getAverageRating(productId);
 	}
+	@Operation(summary = "Update review")
 	@PutMapping("/update/{reviewId}")
 	public ReviewResponse updateReview(
 	        @PathVariable Integer reviewId,
@@ -52,6 +56,7 @@ public class ReviewController {
 	    return reviewService.updateReview(reviewId, request);
 	}
 
+	@Operation(summary = "Delete review")
 	@DeleteMapping("/delete/{reviewId}")
 	public String deleteReview(@PathVariable Integer reviewId)
 	{

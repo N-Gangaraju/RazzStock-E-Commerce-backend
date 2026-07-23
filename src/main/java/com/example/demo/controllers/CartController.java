@@ -17,6 +17,8 @@ import com.example.demo.DTO.CartResponse;
 import com.example.demo.DTO.UpdateCartRequest;
 import com.example.demo.services.CartService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/cart")
 public class CartController 
@@ -24,26 +26,31 @@ public class CartController
 	@Autowired
 	private CartService cartservice;
 	
+	@Operation(summary = "Add Products to Cart")
 	@PostMapping("/add")
 	public CartResponse addToCart(@RequestBody CartRequest request)
 	{
 		return cartservice.addToCart(request);
 	}
+	@Operation(summary = "View My Cart")
 	@GetMapping("/mycart")
 	public List<CartResponse>mycart()
 	{
 		return cartservice.myCart();
 	}
+	@Operation(summary = "Update Cart Products By Id")
 	@PutMapping("/update/{cartId}")
 	public CartResponse updateCart(@PathVariable Integer cartId,@RequestBody UpdateCartRequest request)
 	{
 		return cartservice.updateCart(cartId, request);
 	}
+	@Operation(summary = "Delete Cart Products By Id")
 	@DeleteMapping("/delete/{cartId}")
 	public String deleteCart(@PathVariable Integer cartId)
 	{
 		return cartservice.deleteCart(cartId);
 	}
+	@Operation(summary = "Place Order")
 	@PostMapping("/checkout")
 	public String checkout()
 	{

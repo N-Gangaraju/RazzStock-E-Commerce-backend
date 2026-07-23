@@ -76,14 +76,14 @@ public class ProductService {
 	    response.setQuantity(product.getQuantity());
 	    response.setDescription(product.getDescription());
 	    response.setImageUrl(
-	            "http://localhost:8080/" + product.getImageUrl()
+	            "http://localhost:8080/uploads/" + product.getImageUrl()
 	        );
 
 	    response.setCategoryname(product.getCategory().getName());
 	    response.setSuppliername(product.getSupplier().getName());
 
 	    response.setCreatedAt(
-	    	    product.getCreatedAt() != null
+	    	    product.getCreatedAt()!= null
 	    	        ? product.getCreatedAt().toString()
 	    	        : null
 	    	);
