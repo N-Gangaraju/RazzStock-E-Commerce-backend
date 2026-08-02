@@ -1,17 +1,18 @@
 package com.example.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DTO.ForgotPasswordRequest;
 import com.example.demo.DTO.LoginRequest;
-import com.example.demo.security.CustomUserDetailsService;
-import com.example.demo.security.JwtService;
+import com.example.demo.DTO.LoginResponse;
+import com.example.demo.DTO.OtpRequest;
+import com.example.demo.DTO.ResetPasswordRequest;
+import com.example.demo.repos.UserRepo;
+import com.example.demo.services.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,12 +22,12 @@ import jakarta.validation.Valid;
 @RequestMapping("/auth")
 @Tag(name = "Authentication API", description = "Authentication and authorization endpoints")
 public class AuthenticationController {
+	
 	@Autowired
-	private AuthenticationManager manager;
+	private AuthService authService;
+	
 	@Autowired
-	private JwtService jwtservice;
-	@Autowired
-	private CustomUserDetailsService service;
+	private UserRepo userRepo;
 	
 	@Operation(
 	        summary = "Login user",
@@ -35,9 +36,20 @@ public class AuthenticationController {
 	@PostMapping("/login")
 	public String login( @Valid @RequestBody LoginRequest request)
 	{
-		manager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-		UserDetails userDetails = service.loadUserByUsername(request.getUsername());
-		return jwtservice.generateToken(userDetails);
+		return authService.login(request);
+	}
+	@PostMapping("/verify-otp")
+	public LoginResponse verifyOtp(@RequestBody OtpRequest request) {
+	    return authService.verifyOtp(request);
+	}
+	@PostMapping("/forgot-password")
+	public String forgotPassword(@RequestBody ForgotPasswordRequest request) {
+	    return authService.forgotPassword(request);
+	}
+
+	@PostMapping("/reset-password")
+	public String resetPassword(@RequestBody ResetPasswordRequest request) {
+	    return authService.resetPassword(request);
 	}
 	
 	

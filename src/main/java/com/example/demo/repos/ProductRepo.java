@@ -1,6 +1,7 @@
 package com.example.demo.repos;
 
 import java.util.List;
+import org.springframework.data.repository.query.Param;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,18 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
 	List<Product>findAllByOrderByPriceDesc();
 	@Query("SELECT COUNT(p) FROM Product p WHERE p.quantity < 5")
 	long countLowStockProducts();
+	
+	@Query("select distinct p.brand from Product p")
+	List<String> getAllBrands();
+	
+
+	@Query("""
+	SELECT p FROM Product p
+	WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+	   OR LOWER(p.brand) LIKE LOWER(CONCAT('%', :keyword, '%'))
+	   OR LOWER(p.category.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+	""")
+	List<Product> searchProducts(@Param("keyword") String keyword);
 	
 	
 	

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,6 @@ import com.example.demo.services.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/products")
@@ -87,6 +87,11 @@ public class ProductController {
 		System.out.println("uploaded endpoint called");
 	    return serv.uploadImage(productId, file);
 	}
+	@GetMapping("/brands")
+	public List<String> getBrands()
+	{
+	    return serv.getAllBrands();
+	}
 	//----------------------------------CURD---------------------------------------
 	
 	@Operation(summary="Add a Product")
@@ -112,9 +117,9 @@ public class ProductController {
 	
 	@Operation(summary = "Update Product")
 	@PutMapping("/update/{id}")
-	public Product updateById(@PathVariable Integer id,@RequestBody Product prod)
+	public Product updateById(@PathVariable Integer id,@RequestBody ProductRequest request)
 	{
-		return serv.updateProduct(id, prod);
+		return serv.updateProduct(id, request);
 	}
 	
 	@Operation(summary = "Delete Product")

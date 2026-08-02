@@ -14,6 +14,9 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder encoder;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	public User register(User user)
 	{
 		if(repo.findByUsername(user.getUsername()).isPresent())
@@ -25,7 +28,11 @@ public class UserService {
 			throw new RuntimeException("Email already Exists");
 		}
 		user.setPassword(encoder.encode(user.getPassword()));
-		return repo.save(user);
+		User savedUser = repo.save(user);
+		
+		emailService.sendWelcomeEmail(savedUser.getUsername(),savedUser.getEmail());
+		
+		return savedUser;
 	}
 
 }

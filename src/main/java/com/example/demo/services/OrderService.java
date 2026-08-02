@@ -3,6 +3,7 @@ package com.example.demo.services;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,11 +22,15 @@ import com.example.demo.repos.UserRepo;
 @Service
 public class OrderService {
 
+
 	@Autowired
 	private OrderRepo orderrepo;
 	@Autowired
 	private UserRepo userrepo;
-	@Autowired ProductRepo productRepo;
+	@Autowired 
+	ProductRepo productRepo;
+	@Autowired
+	private EmailService emailService;
 	
 	public List<OrderResponse> myOrders()
 	{
@@ -86,6 +91,7 @@ public class OrderService {
 	}
 	public OrderResponse updateOrderStatus(Integer orderId,UpdateOrderStatusRequest request)
 	{
+		
 		Order order = orderrepo.findById(orderId)
 				.orElseThrow(()->new RuntimeException("Order Not Found"));
 		
@@ -93,6 +99,13 @@ public class OrderService {
 		
 		Order updatedOrder = orderrepo.save(order);
 		
+		
+		
+		// Send status update email to customer
+		emailService.sendOrderStatusUpdate(
+				updatedOrder.getUser(),
+				updatedOrder);
+
 		OrderResponse response = new OrderResponse();
 
 		response.setOrderId(updatedOrder.getId());
@@ -140,7 +153,12 @@ public class OrderService {
 		
 		//change status
 		order.setStatus(OrderStatus.CANCELLED);
-		orderrepo.save(order);
+		Order cancelledOrder = orderrepo.save(order);
+
+		emailService.sendOrderStatusUpdate(
+		        cancelledOrder.getUser(),
+		        cancelledOrder
+		);
 		return "Order Cancelled Successsfully";
 			
 		

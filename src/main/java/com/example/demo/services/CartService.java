@@ -36,6 +36,9 @@ public class CartService {
 	@Autowired
 	private OrderRepo orderrepo;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	
 	public CartResponse addToCart(CartRequest request)
 	{
@@ -215,11 +218,15 @@ public class CartService {
 
 	        order.setOrderedAt(LocalDateTime.now());
 
-	        orderrepo.save(order);
+	         Order savedOrder = orderrepo.save(order);
+
+	         emailService.sendOrderConfirmation(user, savedOrder);
+	        
 	    }
 	    cartRepo.deleteAll(carts);
 	    return "Order Placed Successfully";
 	}
+	
 	
 	
 	

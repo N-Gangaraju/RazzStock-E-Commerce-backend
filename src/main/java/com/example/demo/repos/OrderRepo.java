@@ -26,5 +26,28 @@ public interface OrderRepo  extends JpaRepository<Order, Integer>{
 			ORDER BY SUM(o.quantity) DESC
 			""")
 			List<Object[]> getTopSellingProducts();
+			
+			List<Order>findTop10ByOrderByOrderedAtDesc();
+			
+			@Query(value = """
+					SELECT MONTHNAME(ordered_at) AS month,
+					       SUM(amount) AS revenue
+					FROM orders
+					GROUP BY MONTH(ordered_at), MONTHNAME(ordered_at)
+					ORDER BY MONTH(ordered_at)
+					""", nativeQuery = true)
+					List<Object[]> getMonthlyRevenue();
+			
+					
+					@Query("""
+							SELECT o.user.username,
+							       COUNT(o),
+							       SUM(o.amount)
+							FROM Order o
+							GROUP BY o.user.username
+							ORDER BY SUM(o.amount) DESC
+							""")
+							List<Object[]> getTopCustomers();
+					
 	
 }

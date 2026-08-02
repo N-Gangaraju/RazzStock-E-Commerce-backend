@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +22,13 @@ import com.example.demo.Exceptions.ResourceNotFoundException;
 import com.example.demo.repos.Categoryrepo;
 import com.example.demo.repos.ProductRepo;
 import com.example.demo.repos.Supplierrepo;
+
+
 @Service
 public class ProductService {
 	
+	private static final Logger logger =
+	        LoggerFactory.getLogger(ProductService.class);
 	@Autowired
 	private ProductRepo repo;
 	@Autowired
@@ -66,6 +72,9 @@ public class ProductService {
 	{
 		return repo.findByQuantity(0);
 	}
+	public List<String> getAllBrands() {
+	    return repo.getAllBrands();
+	}
 	private ProductResponse convertToResponse(Product product)
 	{
 		ProductResponse response = new ProductResponse();
@@ -77,28 +86,35 @@ public class ProductService {
 	    response.setDescription(product.getDescription());
 	    response.setImageUrl(
 	            "http://localhost:8080/uploads/" + product.getImageUrl()
-	        );
+	    );
 
-	    response.setCategoryname(product.getCategory().getName());
-	    response.setSuppliername(product.getSupplier().getName());
+	    if(product.getCategory()!=null){
+	        response.setCategoryId(product.getCategory().getId());
+	        response.setCategoryname(product.getCategory().getName());
+	    }
+
+	    if(product.getSupplier()!=null){
+	        response.setSupplierId(product.getSupplier().getId());
+	        response.setSuppliername(product.getSupplier().getName());
+	    }
 
 	    response.setCreatedAt(
-	    	    product.getCreatedAt()!= null
-	    	        ? product.getCreatedAt().toString()
-	    	        : null
-	    	);
+	            product.getCreatedAt()!=null
+	            ? product.getCreatedAt().toString()
+	            : null
+	    );
 
-	    	response.setUpdatedAt(
-	    	    product.getUpdatedAt() != null
-	    	        ? product.getUpdatedAt().toString()
-	    	        : null
-	    	);
-
+	    response.setUpdatedAt(
+	            product.getUpdatedAt()!=null
+	            ? product.getUpdatedAt().toString()
+	            : null
+	    );
+	    	
 	    return response;
 	}
 	public List<ProductResponse> searchProducts(String keyword)
 	{
-		List<Product>products = repo.findByNameContainingIgnoreCase(keyword);
+		List<Product>products = repo.searchProducts(keyword);
 		List<ProductResponse>responses = new ArrayList<>();
 		
 		for(Product product : products)
@@ -158,6 +174,8 @@ public class ProductService {
 	    Supplier supplier = supplierrepo.findById(request.getSupplierId())
 	            .orElseThrow(() ->
 	                    new ResourceNotFoundException("Supplier not found with id: " + request.getSupplierId()));
+	    
+	    logger.info("Adding product {}", request.getName());
 	    Product product=new Product();
 	    product.setName(request.getName());
 	    product.setBrand(request.getBrand());
@@ -180,22 +198,45 @@ public class ProductService {
 	}
 	public ProductResponse getProductById(Integer id) 
 	{
-	    Product product = repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Product not found with id:"+id));
+	    Product product = repo.findById(id).orElseThrow(() -> {
+
+            logger.error("Product not found with id {}", id);
+
+            return new RuntimeException("Product Not Found");
+        });
 	    return convertToResponse(product);
 	}
-	public Product updateProduct(Integer id, Product product) 
+	
+	public Product updateProduct(Integer id, ProductRequest request)
 	{
+	    Product product = repo.findById(id)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Product not found"));
 
-	    if (repo.existsById(id)) 
-	    {
-	        product.setId(id);
-	        return repo.save(product);
-	    }
+	    Category category = categoryrepo.findById(request.getCategoryId())
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Category not found"));
 
-	    return null;
+	    Supplier supplier = supplierrepo.findById(request.getSupplierId())
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Supplier not found"));
+
+	    product.setName(request.getName());
+	    product.setBrand(request.getBrand());
+	    product.setPrice(request.getPrice());
+	    product.setQuantity(request.getQuantity());
+	    product.setDescription(request.getDescription());
+
+	    product.setCategory(category);
+	    product.setSupplier(supplier);
+
+	    logger.info("Product updated");
+
+	    return repo.save(product);
 	}
 	public Product deleteProduct(Integer id)
 	{
+		logger.info("Product deleted");
 		Product prod=repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Product not found with id:"+id));
 		if(prod != null)
 		{

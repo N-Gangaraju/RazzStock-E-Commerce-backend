@@ -12,14 +12,20 @@ public class ProductResponse {
 	private String createdAt;
 	private String updatedAt;
 	private String imageUrl;
+	private Integer categoryId;
+	private Integer supplierId;
 
 	public ProductResponse() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
+	
+
+	
 	public ProductResponse(Integer id, String name, String brand, Double price, Integer quantity, String description,
-			String categoryname, String suppliername, String createdAt, String updatedAt) {
+			String categoryname, String suppliername, String createdAt, String updatedAt, String imageUrl,
+			Integer categoryId, Integer supplierId) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -31,9 +37,14 @@ public class ProductResponse {
 		this.suppliername = suppliername;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.imageUrl = imageUrl;
+		this.categoryId = categoryId;
+		this.supplierId = supplierId;
 	}
 
-	
+
+
+
 	public String getImageUrl() {
 		return imageUrl;
 	}
@@ -122,12 +133,23 @@ public class ProductResponse {
 		this.updatedAt = updatedAt;
 	}
 
-	@Override
-	public String toString() {
-		return "ProductResponse [id=" + id + ", name=" + name + ", brand=" + brand + ", price=" + price + ", quantity="
-				+ quantity + ", description=" + description + ", categoryname=" + categoryname + ", suppliername="
-				+ suppliername + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+	
+	public Integer getCategoryId() {
+		return categoryId;
 	}
+
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public Integer getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(Integer supplierId) {
+		this.supplierId = supplierId;
+	}
+
 	
 	
 
