@@ -27,10 +27,10 @@ public class Product {
 	@NotBlank(message="Brand is Required")
 	private String brand;
 	
-	@Positive(message="price must be greater Than 0")
+	@Positive(message="Price must be greater Than 0")
 	private Double price;
 	
-	@PositiveOrZero(message="quantity cannot be negative")
+	@PositiveOrZero(message="Quantity cannot be negative")
 	private Integer quantity;
 	private String description;
 	@ManyToOne

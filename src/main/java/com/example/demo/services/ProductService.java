@@ -211,15 +211,15 @@ public class ProductService {
 	{
 	    Product product = repo.findById(id)
 	            .orElseThrow(() ->
-	                    new ResourceNotFoundException("Product not found"));
+	                    new ResourceNotFoundException("Product Not Found"));
 
 	    Category category = categoryrepo.findById(request.getCategoryId())
 	            .orElseThrow(() ->
-	                    new ResourceNotFoundException("Category not found"));
+	                    new ResourceNotFoundException("Category Not Found"));
 
 	    Supplier supplier = supplierrepo.findById(request.getSupplierId())
 	            .orElseThrow(() ->
-	                    new ResourceNotFoundException("Supplier not found"));
+	                    new ResourceNotFoundException("Supplier Not Found"));
 
 	    product.setName(request.getName());
 	    product.setBrand(request.getBrand());
