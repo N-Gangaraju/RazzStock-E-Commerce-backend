@@ -21,7 +21,7 @@ public class UserService {
 	{
 		if(repo.findByUsername(user.getUsername()).isPresent())
 		{
-			throw new RuntimeException("Username already Exists");
+			throw new RuntimeException("Username Already Exists");
 		}
 		if(repo.findByEmail(user.getEmail()).isPresent())
 		{
