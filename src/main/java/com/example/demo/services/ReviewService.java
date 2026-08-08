@@ -147,26 +147,61 @@ public class ReviewService {
 	}
 	public String deleteReview(Integer reviewId)
 	{
-	    Authentication authentication =
-	            SecurityContextHolder.getContext().getAuthentication();
-
-	    String username = authentication.getName();
-
-	    User user = userRepo.findByUsername(username)
-	            .orElseThrow(() -> new RuntimeException("User Not Found"));
-
 	    Review review = reviewRepo.findById(reviewId)
 	            .orElseThrow(() -> new RuntimeException("Review Not Found"));
 
-	    // Only the review owner can delete
-	    if (!review.getUser().getId().equals(user.getId()))
+	    Authentication authentication =
+	            SecurityContextHolder.getContext().getAuthentication();
+
+	    boolean isAdmin = authentication.getAuthorities()
+	            .stream()
+	            .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+
+	    if(!isAdmin)
 	    {
-	        throw new RuntimeException("You are not allowed to delete this review");
+	        String username = authentication.getName();
+
+	        User user = userRepo.findByUsername(username)
+	                .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+
+	        // Customer can delete only own review
+	        if(!review.getUser().getId().equals(user.getId()))
+	        {
+	            throw new RuntimeException("You are not allowed to delete this review");
+	        }
 	    }
+
 
 	    reviewRepo.delete(review);
 
 	    return "Review Deleted Successfully";
+	}
+	public List<ReviewResponse> getAllReviews()
+	{
+	    return reviewRepo.findAll()
+	            .stream()
+	            .map(review -> {
+
+	                ReviewResponse response = new ReviewResponse();
+
+	                response.setReviewId(review.getId());
+	                response.setRating(review.getRating());
+	                response.setComment(review.getComment());
+
+	                response.setProductName(
+	                    review.getProduct().getName()
+	                );
+
+	                response.setUsername(
+	                    review.getUser().getUsername()
+	                );
+
+	                return response;
+
+	            })
+	            .toList();
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,9 @@ public class UserService {
 		emailService.sendWelcomeEmail(savedUser.getUsername(),savedUser.getEmail());
 		
 		return savedUser;
+	}
+	public List<User>getAllUsers(){
+		return repo.findAll();
 	}
 
 }

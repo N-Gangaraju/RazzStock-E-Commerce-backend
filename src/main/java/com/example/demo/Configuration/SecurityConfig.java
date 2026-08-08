@@ -68,7 +68,8 @@ public class SecurityConfig {
         	            "/dashboard/**",
         	            "/categories/add",
         	            "/categories/update/**",
-        	            "/categories/delete/**"
+        	            "/categories/delete/**",
+        	            "/reviews/delete/**"
         	           
         	    ).hasRole("ADMIN")
 

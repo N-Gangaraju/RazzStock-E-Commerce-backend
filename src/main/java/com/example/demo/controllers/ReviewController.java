@@ -63,5 +63,12 @@ public class ReviewController {
 	    return reviewService.deleteReview(reviewId);
 	}
 	
+	@Operation(summary = "Get all reviews for admin")
+	@GetMapping
+	public List<ReviewResponse> getAllReviews()
+	{
+	    return reviewService.getAllReviews();
+	}
+	
 	
 }
