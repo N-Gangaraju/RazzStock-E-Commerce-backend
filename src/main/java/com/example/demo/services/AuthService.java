@@ -132,7 +132,7 @@ public class AuthService {
 	    public String forgotPassword(ForgotPasswordRequest request) {
 
 	        User user = userRepo.findByEmail(request.getEmail())
-	                .orElseThrow(() -> new RuntimeException("Email not found"));
+	                .orElseThrow(() -> new RuntimeException("Email Not Found"));
 
 	        String otp = generateOtp();
 

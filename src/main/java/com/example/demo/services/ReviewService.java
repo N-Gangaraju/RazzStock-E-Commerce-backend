@@ -119,10 +119,10 @@ public class ReviewService {
 	    String username = authentication.getName();
 
 	    User user = userRepo.findByUsername(username)
-	            .orElseThrow(() -> new RuntimeException("User Not Found"));
+	            .orElseThrow(() -> new RuntimeException("User not Found"));
 
 	    Review review = reviewRepo.findById(reviewId)
-	            .orElseThrow(() -> new RuntimeException("Review Not Found"));
+	            .orElseThrow(() -> new RuntimeException("Review not Found"));
 
 	    // Only the review owner can update
 	    if (!review.getUser().getId().equals(user.getId()))
