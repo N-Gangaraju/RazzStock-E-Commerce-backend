@@ -14,7 +14,7 @@ public class SwaggerConfig
 		return new OpenAPI()
 				.info(new Info()
 						.title("RazzStock - Full-Stack E-Commerce Platform")
-						.description("REST API for managing Products, Categories and Suppliers")
+						.description("RazzStock is a full-stack e-commerce platform that provides REST APIs for managing users, products, categories, suppliers, shopping carts, wishlists, orders, reviews, and admin operations. The platform is built with Spring Boot and provides secure and scalable APIs for seamless product and order management.")
 						.version("1.0")
 						.contact(new Contact()
 								.name("Gangaraju")
