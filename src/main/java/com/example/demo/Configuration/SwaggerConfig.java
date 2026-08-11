@@ -13,7 +13,7 @@ public class SwaggerConfig
 	{
 		return new OpenAPI()
 				.info(new Info()
-						.title("SmartShelf Inventory Management API")
+						.title("RazzStock - Full-Stack E-Commerce Platform")
 						.description("REST API for managing Products, Categories and Suppliers")
 						.version("1.0")
 						.contact(new Contact()
