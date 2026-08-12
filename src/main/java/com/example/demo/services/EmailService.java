@@ -42,7 +42,7 @@ public class EmailService {
          • Browse products
          • Add products to cart
          • Place orders
-         • Download invoices
+         • Download Invoices
 
          Thank you for choosing RazzStock.
 
@@ -64,9 +64,9 @@ public class EmailService {
 
 	            "Your order has been placed successfully.\n\n" +
 
-	            "=============================\n" +
+	            "===============================\n" +
 	            "ORDER DETAILS\n" +
-	            "=============================\n" +
+	            "===============================\n" +
 	            "Order ID   : " + order.getId() + "\n" +
 	            "Product    : " + order.getProduct().getName() + "\n" +
 	            "Quantity   : " + order.getQuantity() + "\n" +
@@ -93,9 +93,9 @@ public class EmailService {
 
 	            "Your RazzStock order status has been updated.\n\n" +
 
-	            "=============================\n" +
+	            "================================\n" +
 	            "ORDER DETAILS\n" +
-	            "=============================\n" +
+	            "================================\n" +
 
 	            "Order ID : " + order.getId() + "\n" +
 	            "Product  : " + order.getProduct().getName() + "\n" +
