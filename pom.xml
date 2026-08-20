@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sts</groupId>
-	<artifactId>Smart_Shelf_Project</artifactId>
+	<artifactId>RazzStock_Project</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Smart_Shelf_Project</name>
+	<name>RazzStock_Project</name>
 	<description/>
 	<url/>
 	<licenses>
